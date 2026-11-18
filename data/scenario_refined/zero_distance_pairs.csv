@@ -1,0 +1,8 @@
+﻿sender_id,receiver_id,road_distance_km,source_id,review_note
+KR-WASTE-00072,KFB-0020,0.000,SCENARIO-SEOUL-2026-11,OSRM returned zero distance; verify coordinates and route result.
+KR-WASTE-09207,KFB-0014,0.000,SCENARIO-SEOUL-2026-11,OSRM returned zero distance; verify coordinates and route result.
+KR-WASTE-09226,KFB-0014,0.000,SCENARIO-SEOUL-2026-11,OSRM returned zero distance; verify coordinates and route result.
+KR-WASTE-09262,KFB-0014,0.000,SCENARIO-SEOUL-2026-11,OSRM returned zero distance; verify coordinates and route result.
+KR-WASTE-09265,KFB-0014,0.000,SCENARIO-SEOUL-2026-11,OSRM returned zero distance; verify coordinates and route result.
+KR-WASTE-09267,KFB-0014,0.000,SCENARIO-SEOUL-2026-11,OSRM returned zero distance; verify coordinates and route result.
+KR-WASTE-09274,KFB-0014,0.000,SCENARIO-SEOUL-2026-11,OSRM returned zero distance; verify coordinates and route result.

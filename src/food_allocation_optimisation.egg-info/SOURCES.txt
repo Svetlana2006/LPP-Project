@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+src/food_allocation/__init__.py
+src/food_allocation/baseline.py
+src/food_allocation/evaluation.py
+src/food_allocation/models.py
+src/food_allocation/solver.py
+src/food_allocation/validation.py
+src/food_allocation_optimisation.egg-info/PKG-INFO
+src/food_allocation_optimisation.egg-info/SOURCES.txt
+src/food_allocation_optimisation.egg-info/dependency_links.txt
+src/food_allocation_optimisation.egg-info/requires.txt
+src/food_allocation_optimisation.egg-info/top_level.txt
+tests/test_allocation.py

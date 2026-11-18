@@ -1,0 +1,4 @@
+﻿population,record_count,minimum_kg_month,maximum_kg_month,mean_kg_month,median_kg_month,q1_kg_month,q3_kg_month,tukey_upper_fence_kg_month,above_tukey_fence_count,p05_kg_month,p10_kg_month,p25_kg_month,p50_kg_month,p75_kg_month,p90_kg_month,p95_kg_month,p99_kg_month,p99_9_kg_month
+nationwide restaurant-classified source records,14476,0.0,1387000.0,5266.310377198298,1300.0,600.0,3431.25,7678.125,2063,54.75,200.0,600.0,1300.0,3431.25,12000.0,21021.0,54000.0,284958.17499998846
+Seoul restaurant source records before deduplication,1796,0.0,89420.0,2885.4650334075723,1200.0,600.0,2192.5,4581.25,197,40.0,182.5,600.0,1200.0,2192.5,5340.0,10800.0,36000.0,86990.39999999979
+deduplicated Seoul scenario senders,1795,0.0,89420.0,2886.9054038997215,1200.0,600.0,2195.0,4587.5,197,40.0,182.00000000000003,600.0,1200.0,2195.0,5352.000000000016,10800.0,36000.0,86993.27999999972

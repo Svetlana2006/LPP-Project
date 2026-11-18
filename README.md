@@ -135,7 +135,7 @@ Relevant files:
 
 | Model concept | Public observation | What the model uses |
 |---|---|---|
-| Restaurant amount | Expected food-waste discharge \(W_i\), kg/month | \(s_i=\alpha W_i\), an assumed fraction treated as available scenario supply |
+| Restaurant amount | Expected food-waste discharge $W_i$, kg/month | $s_i=\alpha W_i$, an assumed fraction treated as available scenario supply |
 | NGO amount | 2025 historical receipt/provision activity; quantity unit unstated | A selected hypothetical capacity rule; no historical flow is called capacity |
 | Sender-receiver relationship | No verified donor acceptance or service-area link | A scenario edge based on distance and, optionally, address-quality filters |
 | Route distance | Estimated OpenStreetMap/OSRM pair distance | A pairwise distance coefficient in km |
@@ -148,84 +148,84 @@ not proof that food was accepted, picked up, or delivered.
 
 ### 4.1 Sets, parameters, and units
 
-- \(I\): restaurant sender nodes, with \(i\in I\).
-- \(J\): listed receiver nodes, with \(j\in J\).
-- \(W_i\): source-reported expected food waste for sender \(i\), in kg/month.
-- \(\alpha\): assumed eligible fraction of expected waste. The sensitivity
-  grid uses \(0.05, 0.10, 0.20, 0.30,\) and \(0.40\).
-- \(s_i=\alpha W_i\): scenario supply in kg/month. This is not measured
+- $I$: restaurant sender nodes, with $i\in I$.
+- $J$: listed receiver nodes, with $j\in J$.
+- $W_i$: source-reported expected food waste for sender $i$, in kg/month.
+- $\alpha$: assumed eligible fraction of expected waste. The sensitivity
+  grid uses $0.05, 0.10, 0.20, 0.30,$ and $0.40$.
+- $s_i=\alpha W_i$: scenario supply in kg/month. This is not measured
   edible surplus.
-- \(S=\sum_{i\in I}s_i\): total scenario supply.
-- \(\beta\): assumed ratio of total receiving capacity to total scenario
-  supply. The main sensitivity grid uses \(0.50, 1.00,\) and \(1.50\).
-- \(q_j\): nonnegative receiver share, with
-  \(\sum_{j\in J}q_j=1\).
-- \(C_j=\beta S q_j\): hypothetical receiver capacity in kg/month.
-- \(d_{ij}\): estimated pairwise OSRM road distance from sender \(i\) to
-  receiver \(j\), in km.
-- \(e_{ij}\in\{0,1\}\): scenario geographic-eligibility indicator.
+- $S=\sum_{i\in I}s_i$: total scenario supply.
+- $\beta$: assumed ratio of total receiving capacity to total scenario
+  supply. The main sensitivity grid uses $0.50, 1.00,$ and $1.50$.
+- $q_j$: nonnegative receiver share, with
+  $\sum_{j\in J}q_j=1$.
+- $C_j=\beta S q_j$: hypothetical receiver capacity in kg/month.
+- $d_{ij}$: estimated pairwise OSRM road distance from sender $i$ to
+  receiver $j$, in km.
+- $e_{ij}\in\{0,1\}$: scenario geographic-eligibility indicator.
 
 ### 4.2 Decision variable
 
-\[
+$$
 x_{ij}\ge 0
-\]
+$$
 
-is kilograms of scenario supply allocated from sender \(i\) to receiver \(j\)
+is kilograms of scenario supply allocated from sender $i$ to receiver $j$
 during the modeled period. The LP is continuous, so one sender's supply may
 be split among multiple receivers.
 
 ### 4.3 Stage 1: maximize allocated kilograms
 
-\[
+$$
 \boxed{\max Z=\sum_{i\in I}\sum_{j\in J}x_{ij}}
-\]
+$$
 
 Subject to sender supply:
 
-\[
+$$
 \sum_{j\in J}x_{ij}\le s_i
 \qquad \forall i\in I
-\]
+$$
 
 Subject to receiver capacity:
 
-\[
+$$
 \sum_{i\in I}x_{ij}\le C_j
 \qquad \forall j\in J
-\]
+$$
 
 Subject to pair eligibility and non-negativity:
 
-\[
+$$
 0\le x_{ij}\le \min(s_i,C_j)e_{ij}
 \qquad \forall i\in I,\ j\in J
-\]
+$$
 
 If a pair is ineligible, its allocation is fixed to zero. If it is eligible,
 its allocation cannot exceed either its sender's supply or receiver's
-capacity. Stage 1 returns the maximum feasible allocated amount \(Z^\star\).
+capacity. Stage 1 returns the maximum feasible allocated amount $Z^\star$.
 
 ### 4.4 Stage 2: minimize pairwise kilogram-kilometres
 
 The second LP uses the same supply, capacities, and eligible pairs, and fixes
 total allocation at the Stage 1 optimum:
 
-\[
+$$
 \boxed{\min \sum_{i\in I}\sum_{j\in J}d_{ij}x_{ij}}
-\]
+$$
 
 subject to all Stage 1 constraints and:
 
-\[
+$$
 \sum_{i\in I}\sum_{j\in J}x_{ij}=Z^\star.
-\]
+$$
 
 The objective is kg-km. This lexicographic design maximizes food allocated
 first and then minimizes pairwise distance **without reducing that maximum**.
 It does not minimize full vehicle-tour distance, number of vehicles, elapsed
 time, cost, or emissions. The solver is SciPy HiGHS with primal and dual
-feasibility tolerances of \(10^{-8}\).
+feasibility tolerances of $10^{-8}$.
 
 The implementation is in `src/food_allocation/solver.py`; typed model objects
 are in `src/food_allocation/models.py`.
@@ -237,7 +237,7 @@ are in `src/food_allocation/models.py`.
 The original/refined experiment grid explores:
 
 - **5 eligible-fraction values:** 5%, 10%, 20%, 30%, and 40%.
-- **3 total-capacity ratios:** \(\beta=0.5, 1.0, 1.5\).
+- **3 total-capacity ratios:** $\beta=0.5, 1.0, 1.5$.
 - **4 hypothetical capacity-share distributions:**
   - `uniform`: equal share to all 32 sites.
   - `linear_rank`: shares increase with alphabetical receiver-ID rank.
@@ -252,9 +252,9 @@ The original/refined experiment grid explores:
   or largest supply first.
 
 The full grid contains **2,160 result rows**:
-\(5\times3\times4\times6\times2\times3\).
+$5\times3\times4\times6\times2\times3$.
 Because all supplies and beta-derived capacities scale together with
-\(\alpha\), outcomes for the five alpha values are linear rescalings of the
+$\alpha$, outcomes for the five alpha values are linear rescalings of the
 same underlying network/capacity solve. Therefore, 2,160 rows are not 2,160
 independent empirical trials.
 
@@ -263,12 +263,12 @@ independent empirical trials.
 A separate experiment uses the 2025 site provision quantities only to define
 relative shares:
 
-\[
+$$
 q_j=
 \frac{\text{2025 reported provision quantity}_j}
 {\sum_{k\in J_{\mathrm{matched}}}
  \text{2025 reported provision quantity}_k}.
-\]
+$$
 
 The source quantity has no stated unit. This ratio is used only as a
 dimensionless historical-throughput share; the source quantity is never
@@ -278,7 +278,7 @@ nationwide-level directory listing receives zero **modeled share** because
 there is no separate Seoul statistic row. This is a modeling convention, not
 evidence that its real capacity is zero.
 
-For the focused run, the assumptions are \(\alpha=0.10\) and \(\beta=1.00\).
+For the focused run, the assumptions are $\alpha=0.10$ and $\beta=1.00$.
 The deduplicated Seoul source expected-waste quantities total 5,181,995.20
 kg/month, so scenario supply is **518,199.52 kg**. Total hypothetical capacity
 is set equal to that supply and distributed by the historical shares. Thus
@@ -312,9 +312,9 @@ algorithm comparison.
 
 For any one instance, the greedy allocation is feasible for the LP's Stage 1
 problem. Consequently, if the LP solver reaches the optimum,
-\[
+$$
 Z_{\mathrm{LP}}\ge Z_{\mathrm{greedy}}.
-\]
+$$
 This proves “no worse” on the **kilograms allocated** objective for a matched
 instance, not a strict improvement. A tie is expected when greedy happens to
 find a maximum allocation.
@@ -343,8 +343,8 @@ real-world superiority. By geographic threshold, the strict-win counts were:
 | Complete network | 0 | 360 | 360 |
 
 Across capacity ratios, the grid had 265 strict wins and 455 ties for
-\(\beta=0.5\); 420 wins and 300 ties for \(\beta=1.0\); and 350 wins and 370
-ties for \(\beta=1.5\) (720 comparisons each).
+$\beta=0.5$; 420 wins and 300 ties for $\beta=1.0$; and 350 wins and 370
+ties for $\beta=1.5$ (720 comparisons each).
 
 **Observed pattern:** strict improvements were most frequent at the 10 km
 cutoff (330/360) and occurred in all complete-network comparisons as ties.

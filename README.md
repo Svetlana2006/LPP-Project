@@ -437,7 +437,7 @@ See `docs/google_closing_time_experiment.md`,
 
 ## 9. Automated tests and what they establish
 
-The most recent full test run collected and passed **54 tests**. Tests use
+The most recent full test run collected and passed **64 tests**. Tests use
 small constructed examples and fixture data; they verify software behavior,
 not the accuracy of public data or real operational assumptions.
 
@@ -451,7 +451,8 @@ not the accuracy of public data or real operational assumptions.
 | `tests/test_build_seoul_hours_source_union.py` | 2 | Source-union provenance, deduplication, and strict OSM match handling |
 | `tests/test_build_seoul_lp_hours_scenario.py` | 1 | Matched daily close retention and explicit assumption labels for unknown hours |
 | `tests/test_import_seoul_osm_hours.py` | 2 | Road-address parsing and strict name/location/context matching for OSM hours |
-| **Total** | **54** | All passed in the last full run |
+| `tests/test_demo.py` | 10 | Demo input validation and the 7-restaurant/3-NGO LP-versus-greedy showcase |
+| **Total** | **64** | All passed in the most recent full run |
 
 To run them from the repository root:
 
@@ -479,6 +480,47 @@ py -m venv .venv
 .\.venv\Scripts\streamlit.exe run app.py
 ```
 
+For the interactive grid demonstration, install frontend dependencies once,
+then run the React UI and its local API together:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+### Saved 7-restaurant / 3-NGO grid example
+
+Use the following values to recreate the custom network. Point names below
+are row labels because names were not included with the supplied values; the
+names shown in the app can be kept or changed without changing these numeric
+inputs.
+
+| Point | Supply / capacity (kg) | X | Y |
+|---|---:|---:|---:|
+| Restaurant 1 | 10 | 3 | 7 |
+| Restaurant 2 | 10 | 2 | 2 |
+| Restaurant 3 | 5 | 1 | 5 |
+| Restaurant 4 | 5 | 2 | 1 |
+| Restaurant 5 | 5 | 4 | 2 |
+| Restaurant 6 | 5 | 6 | 1 |
+| Restaurant 7 | 5 | 8 | 6 |
+| **Restaurant supply total** | **45** | — | — |
+| NGO 1 | 15 | 4 | 3 |
+| NGO 2 | 20 | 6 | 10 |
+| NGO 3 | 10 | 5 | 8 |
+| **NGO capacity total** | **45** | — | — |
+
+The maximum pair distance was not included with the supplied values. Set that
+slider separately; changing it changes which restaurant–NGO pairs are
+eligible and may change the allocation. These are illustrative demo inputs,
+not observed food surplus or measured NGO capacity.
+
+The demo calls the same two-stage LP and greedy implementation described
+above. Its user-entered quantities are illustrative, and its grid-derived
+distances and maximum-distance eligibility rule are synthetic—not road routes,
+donation permissions, or measured food-bank capacities.
+
 The historical-throughput-weighted LP-versus-greedy experiment can be
 reproduced from retained local data without new route requests:
 
@@ -503,6 +545,10 @@ does not itself request new routes.
 
 - `app.py` — Streamlit interface for built-in scenarios and validated user
   uploads.
+- `frontend/` — interactive React grid demonstration of the LP and greedy
+  baseline, started with `npm run dev`.
+- `src/food_allocation/demo.py` — validated adapter from grid inputs to the
+  existing allocation solver.
 - `src/food_allocation/models.py` — sender, receiver, pair, instance, and
   result data structures.
 - `src/food_allocation/solver.py` — Stage 1 and Stage 2 LPs.
